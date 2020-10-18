@@ -1,9 +1,10 @@
 plugins {
 	id 'org.springframework.boot' version '2.3.4.RELEASE'
 	id 'io.spring.dependency-management' version '1.0.10.RELEASE'
-	id "com.ewerk.gradle.plugins.querydsl" version "1.0.10"					// QueryDSL 
 	id 'java'
 	id 'war'
+ 	id 'com.ewerk.gradle.plugins.querydsl' version '1.0.10'
+    id 'idea'
 }
 
 group = 'com.eyeson'
@@ -17,7 +18,7 @@ configurations {
 }
 
 repositories {
-	mavenCentral()
+	mavenCentral() 	
 }
 
 dependencies {
@@ -26,10 +27,10 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-jdbc'			// Spring JDBC
 	implementation 'org.springframework.boot:spring-boot-starter-data-jdbc'		// Spring data JDBC
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'		// Spring data JPA
+	compile("org.springframework.boot:spring-boot-starter-websocket")			// Spring Websocket
 //	implementation 'org.springframework.boot:spring-boot-starter-data-mongodb'	// Spring data MongoDB
 //	implementation 'org.springframework.boot:spring-boot-starter-data-redis'	// Spring data Redis
 //	implementation 'org.springframework.boot:spring-boot-starter-security'		// Spring Security
-	compile("org.springframework.boot:spring-boot-starter-websocket")			// Spring Websocket
 
 //	Library
 	compileOnly 'org.projectlombok:lombok'										// 	lombok
@@ -38,11 +39,10 @@ dependencies {
 	runtimeOnly 'org.postgresql:postgresql'										// 	PostgreSQL Connection
 	compile 'io.springfox:springfox-swagger2:2.9.2'								//  Swagger	2
 	compile 'io.springfox:springfox-swagger-ui:2.9.2'							// 	Swagger-ui
+	compile("com.querydsl:querydsl-apt:4.2.1")									// 	QueryDSL-APT
+  	compile("com.querydsl:querydsl-jpa:4.2.1")									//	QueryDSL-JPA
 //	compile("com.querydsl:querydsl-core:4.2.1")
-	compile("com.querydsl:querydsl-apt:4.2.1")
-  	compile("com.querydsl:querydsl-jpa:4.2.1")
 //	compile("com.querydsl:querydsl-collections:4.2.1")
-	
 
 	
 	providedRuntime 'org.springframework.boot:spring-boot-starter-tomcat'		// 	Spring tomcat
@@ -57,26 +57,27 @@ test {
 	useJUnitPlatform()
 }
 
+// querydsl 적용을 위해 추가 (34~56)
 def querydslSrcDir = 'src/main/generated'
-
+ 
 querydsl {
     library = "com.querydsl:querydsl-apt"
     jpa = true
     querydslSourcesDir = querydslSrcDir
 }
-
+ 
+compileQuerydsl{
+    options.annotationProcessorPath = configurations.querydsl
+}
+ 
+configurations {
+    querydsl.extendsFrom compileClasspath
+}
+ 
 sourceSets {
     main {
         java {
             srcDirs = ['src/main/java', querydslSrcDir]
         }
     }
-}
-
-compileQuerydsl{
-    options.annotationProcessorPath = configurations.querydsl
-}
-
-configurations {
-    querydsl.extendsFrom compileClasspath
 }

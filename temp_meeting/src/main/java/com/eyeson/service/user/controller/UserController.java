@@ -24,6 +24,8 @@ public class UserController {
 	
 	private EntityManager em;
 	
+
+	
 	/**
 	 * 사용자 전체 조회
 	 */
@@ -99,20 +101,20 @@ public class UserController {
 	
 	
 	@RequestMapping(value="/selectUserInfo", method = RequestMethod.GET)
-	public void selectUserInfo(@Param("email") String email) {
+	public User selectUserInfo(@Param("email") String email) {
 		System.out.println("parameter  ["+email+"]");
 		
+		User selectUserInfo = new User();
+		try {
+			selectUserInfo = userRepository.findByEmail(email);
+			
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		System.out.println("selectUserInfo"+selectUserInfo);
 		
-//		tb_user_list selectUserInfo = new tb_user_list();
-		
-		
-//		try {
-//			selectUserInfo = userRepository.findByEmail("adjh54@naver.com");
-//		} catch (Exception e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
-//		System.out.println("selectLoginUserInfo RESULT !!!"+ selectUserInfo.getUser_name());
+		return selectUserInfo;
 	}
 	
 //	@RequestMapping(value="/selectLoginUserInfo", method = RequestMethod.GET)
