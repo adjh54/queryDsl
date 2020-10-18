@@ -1,11 +1,17 @@
 package com.eyeson.service.user.repository;
 
+import java.util.List;
+
 import org.springframework.data.repository.query.Param;
 
 import com.eyeson.service.vo.User;
 
 public interface CustomUserRepository {
 
+	
+	public abstract List<User> findAll() throws Exception;
+	
+	
 	public abstract User findByEmail(@Param("email") String email) throws Exception;
 
 	

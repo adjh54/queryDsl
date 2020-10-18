@@ -17,6 +17,7 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 /**
  * JPA Annotation Description 
@@ -24,6 +25,7 @@ import lombok.Setter;
  * @Table:	매핑할 테이블 정보 명시
  */
 @Getter @Setter
+@ToString
 @Entity
 @Table(name="tb_user_list")
 public class User {

@@ -1,6 +1,8 @@
 package com.eyeson.service.user.controller;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.persistence.EntityManager;
 
@@ -11,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.eyeson.service.user.repository.UserRepository;
+import com.eyeson.service.user.repository.impl.UserQueryRepository;
 import com.eyeson.service.vo.User;
 
 
@@ -22,7 +25,6 @@ public class UserController {
 	@Autowired
 	private UserRepository userRepository;
 	
-	private EntityManager em;
 	
 
 	
@@ -99,7 +101,6 @@ public class UserController {
 
 //===================== 예제 영역 ======================================================================
 	
-	
 	@RequestMapping(value="/selectUserInfo", method = RequestMethod.GET)
 	public User selectUserInfo(@Param("email") String email) {
 		System.out.println("parameter  ["+email+"]");
@@ -112,9 +113,30 @@ public class UserController {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		System.out.println("selectUserInfo"+selectUserInfo);
+		System.out.println("selectUserInfo"+selectUserInfo.toString());
 		
 		return selectUserInfo;
+	}
+	
+	@RequestMapping(value="/findAllUser", method = RequestMethod.GET)
+	public List<User> findAllUser() {
+		
+		List<User> findAllUser = new ArrayList<User>();
+		try {
+			findAllUser = (List<User>) userRepository.findAll();
+			
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		for(User user : findAllUser) {
+			System.out.println("userName >>>"+user.getUser_name());
+		}
+		
+		
+		
+		return findAllUser;
 	}
 	
 //	@RequestMapping(value="/selectLoginUserInfo", method = RequestMethod.GET)
