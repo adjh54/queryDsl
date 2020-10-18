@@ -13,7 +13,7 @@ import com.querydsl.core.types.Path;
  * QUser is a Querydsl query type for User
  */
 @Generated("com.querydsl.codegen.EntitySerializer")
-public class QUser extends EntityPathBase<User> {
+public class QUser extends EntityPathBase<UserDTO> {
 
     private static final long serialVersionUID = -173636441L;
 
@@ -48,15 +48,15 @@ public class QUser extends EntityPathBase<User> {
     public final NumberPath<Long> user_seq = createNumber("user_seq", Long.class);
 
     public QUser(String variable) {
-        super(User.class, forVariable(variable));
+        super(UserDTO.class, forVariable(variable));
     }
 
-    public QUser(Path<? extends User> path) {
+    public QUser(Path<? extends UserDTO> path) {
         super(path.getType(), path.getMetadata());
     }
 
     public QUser(PathMetadata metadata) {
-        super(User.class, metadata);
+        super(UserDTO.class, metadata);
     }
 
 }

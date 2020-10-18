@@ -28,7 +28,7 @@ import lombok.ToString;
 @ToString
 @Entity
 @Table(name="tb_user_list")
-public class User {
+public class UserDTO {
 	
 	/**
 	 * @ID:	

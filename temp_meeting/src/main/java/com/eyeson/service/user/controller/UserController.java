@@ -13,8 +13,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.eyeson.service.user.repository.UserRepository;
-import com.eyeson.service.user.repository.impl.UserQueryRepository;
-import com.eyeson.service.vo.User;
+import com.eyeson.service.vo.UserDTO;
+import com.querydsl.jpa.impl.JPAQuery;
 
 
 @RestController
@@ -25,6 +25,7 @@ public class UserController {
 	@Autowired
 	private UserRepository userRepository;
 	
+	private EntityManager em;
 	
 
 	
@@ -32,24 +33,25 @@ public class UserController {
 	 * 사용자 전체 조회
 	 */
 	@RequestMapping(value = "/user", method = RequestMethod.GET)
-	public Iterable<User> userList() {
+	public Iterable<UserDTO> userList() {
 		
 		// TODO: 내장 'save' 사용
-		Iterable<User> userList = userRepository.findAll();
+		Iterable<UserDTO> userList = userRepository.findAll();
 		
 //		for(User userListItem : userList) {
 //			System.out.println("userList Item email >>> "+ userListItem.toString());
 //		}
+		
 		
 		return userList;
 	}
 	
 	/**
 	 * 사용자 등록
-	 * @param User
+	 * @param UserDTO
 	 */
 	@RequestMapping(value="/user", method= RequestMethod.POST)
-	public void insertUser(User user) {
+	public void insertUser(UserDTO user) {
 
 		// Hard Coding Area => 차후 파라미터로 받아서 처리 예정 
 		LocalDateTime nowDate = LocalDateTime.now();
@@ -87,7 +89,7 @@ public class UserController {
 	 * 사용자 정보 수정
 	 */
 	@RequestMapping(value="/user", method= RequestMethod.PUT)
-	public void updateUser(User user) {
+	public void updateUser(UserDTO user) {
 		
 //		String userName = "종훈이222";
 //		String userPassword = "1234555555";
@@ -102,10 +104,10 @@ public class UserController {
 //===================== 예제 영역 ======================================================================
 	
 	@RequestMapping(value="/selectUserInfo", method = RequestMethod.GET)
-	public User selectUserInfo(@Param("email") String email) {
+	public UserDTO selectUserInfo(@Param("email") String email) {
 		System.out.println("parameter  ["+email+"]");
 		
-		User selectUserInfo = new User();
+		UserDTO selectUserInfo = new UserDTO();
 		try {
 			selectUserInfo = userRepository.findByEmail(email);
 			
@@ -113,24 +115,24 @@ public class UserController {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		System.out.println("selectUserInfo"+selectUserInfo.toString());
+		System.out.println("selectUserInfo 결과값 >> "+selectUserInfo.toString());
 		
 		return selectUserInfo;
 	}
 	
 	@RequestMapping(value="/findAllUser", method = RequestMethod.GET)
-	public List<User> findAllUser() {
+	public List<UserDTO> findAllUser() {
 		
-		List<User> findAllUser = new ArrayList<User>();
+		List<UserDTO> findAllUser = new ArrayList<UserDTO>();
 		try {
-			findAllUser = (List<User>) userRepository.findAll();
+			findAllUser = (List<UserDTO>) userRepository.findAll();
 			
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
-		for(User user : findAllUser) {
+		for(UserDTO user : findAllUser) {
 			System.out.println("userName >>>"+user.getUser_name());
 		}
 		

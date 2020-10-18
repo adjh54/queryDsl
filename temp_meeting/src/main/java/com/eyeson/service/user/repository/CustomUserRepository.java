@@ -4,17 +4,17 @@ import java.util.List;
 
 import org.springframework.data.repository.query.Param;
 
-import com.eyeson.service.vo.User;
+import com.eyeson.service.vo.UserDTO;
+import com.querydsl.core.Tuple;
 
 public interface CustomUserRepository {
 
 	
-	public abstract List<User> findAll() throws Exception;
+	public abstract List<UserDTO> findAll() throws Exception;
 	
 	
-	public abstract User findByEmail(@Param("email") String email) throws Exception;
+	public abstract UserDTO findByEmail(@Param("email") String email) throws Exception;
 
-	
 	/*
 	 * ** 정보 사항
 	 *	위치기반 , 이름 기반 쿼리가 있는데 
