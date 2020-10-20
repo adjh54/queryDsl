@@ -8,16 +8,16 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Transient;
+import javax.websocket.Session;
 
 import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.web.socket.WebSocketSession;
 
-import com.mysql.cj.Session;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-import lombok.Builder;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 /**
  * JPA Annotation Description 
@@ -25,10 +25,10 @@ import lombok.Setter;
  * @Table:	매핑할 테이블 정보 명시
  */
 @Getter @Setter
+@ToString
 @Entity
 @Table(name="tb_user_list")
-@EqualsAndHashCode
-public class User {
+public class UserDTO {
 	
 	/**
 	 * @ID:	
@@ -114,9 +114,9 @@ public class User {
 	private String ovSessionId;
 	
 	
-	@Builder
-    public User(String email, String user_name) {
-        this.email = email;
-        this.user_name = user_name;
-    }
+//	@Builder
+//    public User(String email, String user_name) {
+//        this.email = email;
+//        this.user_name = user_name;
+//    }
 }

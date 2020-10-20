@@ -1,8 +1,8 @@
 package com.eyeson.service.user.controller;
 
 import java.time.LocalDateTime;
-
-import javax.persistence.EntityManager;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.query.Param;
@@ -10,8 +10,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.eyeson.service.user.repository.UserRepository;
-import com.eyeson.service.vo.User;
+import com.eyeson.service.user.repository.CommonUserRepository;
+import com.eyeson.service.user.repository.impl.CustomUserRepository;
+import com.eyeson.service.vo.UserDTO;
+import com.querydsl.core.Tuple;
 
 
 @RestController
@@ -20,35 +22,48 @@ public class UserController {
 
 	
 	@Autowired
-	private UserRepository userRepository;
+	private CommonUserRepository commonUserRepository;
 	
-	private EntityManager em;
+	@Autowired
+	private CustomUserRepository customUserRepository;
 	
 	/**
 	 * 사용자 전체 조회
+	 **** CustomUserRepository 사용
+	 * @return List<UserDTO>
 	 */
 	@RequestMapping(value = "/user", method = RequestMethod.GET)
-	public Iterable<User> userList() {
+	public List<UserDTO> userList() {
 		
-		// TODO: 내장 'save' 사용
-		Iterable<User> userList = userRepository.findAll();
+		List<UserDTO> userList = new ArrayList<UserDTO>();
 		
-//		for(User userListItem : userList) {
-//			System.out.println("userList Item email >>> "+ userListItem.toString());
-//		}
+		try {
+			
+			userList = customUserRepository.selectAllUserList();
+			
+			for (UserDTO resultVal : userList) {
+				System.out.println("모든 사용자 이메일 ["+ resultVal.getEmail() +"]"); 
+			}
+		
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		
 		return userList;
 	}
 	
 	/**
 	 * 사용자 등록
-	 * @param User
+	 *** JpaRepository의 내장 함수 사용 
+	 * @param UserDTO
+	 * @return void 
 	 */
 	@RequestMapping(value="/user", method= RequestMethod.POST)
-	public void insertUser(User user) {
-
+	public void insertUser(UserDTO user) {
+		
 		// Hard Coding Area => 차후 파라미터로 받아서 처리 예정 
 		LocalDateTime nowDate = LocalDateTime.now();
+		
 		user.setEmail("adjh54@naver.com");
 		user.setUser_pw("1234");
 		user.setAuthority("ROLE_USER");
@@ -63,89 +78,91 @@ public class UserController {
 		user.setMod_id("ADMIN");
 		user.setMod_date(nowDate);
 		
-		// TODO: 내장 'save' 사용
-		userRepository.save(user);
+//		customUserRepository.insertUserInfo(user);		//
+		commonUserRepository.save(user);		// JpaRepository의 내장 메소드 'save' 사용
 	}
 	
 	/**
-	 * 키값으로 데이터 삭제
-	 * @param user
-	 */
-	@RequestMapping(value="/user", method= RequestMethod.DELETE)
-	public void deleteUserforKey(@Param("userSeq") Long userSeq) {
-		
-		// TODO: 내장 'deleteById' 사용
-		userRepository.deleteById(userSeq);
-	}
-	
-	
-	/**
-	 * 사용자 정보 수정
+	 * [완료]사용자 정보 수정
+	 **** CustomUserRepository 사용
+	 * @param UserDTO
+	 * @return void
 	 */
 	@RequestMapping(value="/user", method= RequestMethod.PUT)
-	public void updateUser(User user) {
+	public void updateUser(UserDTO user) {
+		   
+		/*
+		 * TODO: 차후 변경 파라미터로 변경 예정 
+		 */
+		 user.setAuthority("ROLE_USER");
+		 user.setCountry("KR");
+		 user.setDepartment("CLAB");
+		 user.setEnabled("1");
+		 user.setLang("KR");
+		 user.setUser_name("종훈이2");
+		 user.setUser_pw("369369");
+		 user.setUser_seq(Long.parseLong("1"));
 		
-//		String userName = "종훈이222";
-//		String userPassword = "1234555555";
-//		Long userSeq = (long) 4;
-//		
-//		int result = userRepository.update(userName, userPassword, userSeq);
-//		
-//		return result;
+		customUserRepository.updateUserInfo(user);		// 수정기능
+		
 		
 	}
+	
+	/**
+	 * 사용자 정보 삭제
+	 *** JpaRepository의 내장 함수 사용 
+	 * @param user
+	 * @return void
+	 */
+	@RequestMapping(value="/user", method= RequestMethod.DELETE)
+	public void deleteUserforKey(@Param("user_seq") Long userSeq) {
+		
+		commonUserRepository.deleteById(userSeq);				// JpaRepository의 내장 메소드 'deleteById' 사용
+	}
+	
 
 //===================== 예제 영역 ======================================================================
 	
-	
+	/**
+	  사용자 유저 조회
+	 * @param email
+	 * @return
+	 */
 	@RequestMapping(value="/selectUserInfo", method = RequestMethod.GET)
-	public void selectUserInfo(@Param("email") String email) {
+	public UserDTO selectUserInfo(@Param("email") String email) {
 		System.out.println("parameter  ["+email+"]");
 		
+		UserDTO selectUserInfo = new UserDTO();
+		try {
+			selectUserInfo = customUserRepository.selectUserInfo(email);
+			
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
-//		tb_user_list selectUserInfo = new tb_user_list();
-		
-		
-//		try {
-//			selectUserInfo = userRepository.findByEmail("adjh54@naver.com");
-//		} catch (Exception e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
-//		System.out.println("selectLoginUserInfo RESULT !!!"+ selectUserInfo.getUser_name());
+		return selectUserInfo;
 	}
 	
-//	@RequestMapping(value="/selectLoginUserInfo", method = RequestMethod.GET)
-//	public UserVO selectLoginUserInfo(@Param("email") String email) {
-//		System.out.println("parameter  ["+email+"]");
-//		
-//		UserVO selectLoginUserInfo = new UserVO();
-//		
-//		try {
-//			selectLoginUserInfo = userRepository.selectLoginUserInfo(email);
-//		} catch (Exception e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
-//		System.out.println("selectLoginUserInfo START !!!"+ selectLoginUserInfo);
-//		return selectLoginUserInfo;
-//	}
-//	
-//	@RequestMapping(value="/selectUserById", method = RequestMethod.GET)
-//	public UserVO selectUserById(@Param("email") String email) {
-//		System.out.println("parameter  ["+email+"]");
-//		
-//		UserVO selectUserById = new UserVO();
-//		
-//		try {
-//			selectUserById = userRepository.selectUserById(email);
-//		} catch (Exception e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
-//		
-//		System.out.println("selectUserById START !!!"+ selectUserById);
-//		return selectUserById;
-//	}
+	
+	
+	/**
+	 * 사용자 유저 모두 조회
+	 * @return
+	 * 
+	 */
+	@RequestMapping(value="/selectUserList", method = RequestMethod.GET)
+	public List<Tuple> findAllUser() {
+		List<Tuple> selectUserList = null;
+		try {
+			selectUserList = customUserRepository.selectUserList();
+			
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		return selectUserList;
+	}
 	
 }

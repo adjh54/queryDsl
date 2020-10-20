@@ -2,6 +2,12 @@ package com.eyeson.service.vo;
 
 import java.util.List;
 
+import javax.persistence.Entity;
+import javax.persistence.Table;
+
+import lombok.Getter;
+import lombok.Setter;
+
 
 /**
  * @author 			: yunjin_choi
