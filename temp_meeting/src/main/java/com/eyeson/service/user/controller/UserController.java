@@ -2,7 +2,7 @@ package com.eyeson.service.user.controller;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.List;import javax.annotation.ParametersAreNonnullByDefault;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.query.Param;
@@ -12,9 +12,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.eyeson.service.user.repository.CommonUserRepository;
 import com.eyeson.service.user.repository.impl.CustomUserRepository;
+import com.eyeson.service.vo.LoginVO;
 import com.eyeson.service.vo.UserVO;
-import com.eyeson.service.vo.UserVO;
-import com.querydsl.core.Tuple;
 
 
 @RestController
@@ -77,6 +76,24 @@ public class UserController {
 		System.out.println("result Value >> ["+selectUserById.toString()+"]");
 		
 		return selectUserById;
+	}
+	
+	@RequestMapping(value="/selectGuestInfo", method = RequestMethod.GET)
+	public LoginVO selectGuestInfo(@Param("inviteUuid") String inviteUuid) {
+		System.out.println("parameter  ["+inviteUuid+"]");
+		
+		LoginVO selectGuestInfo = new LoginVO();
+
+		try {
+			
+			selectGuestInfo = customUserRepository.selectGuestInfo(inviteUuid);
+			
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return selectGuestInfo;
 	}
 	
 	

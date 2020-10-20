@@ -8,6 +8,8 @@ import javax.transaction.Transactional;
 import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport;
 import org.springframework.stereotype.Repository;
 
+import com.eyeson.service.vo.LoginVO;
+import com.eyeson.service.vo.QLoginVO;
 import com.eyeson.service.vo.QUserVO;
 import com.eyeson.service.vo.UserVO;
 import com.querydsl.core.types.Projections;
@@ -16,19 +18,6 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 @Repository
 public class CustomUserRepository extends QuerydslRepositorySupport {
 
-    /**
-     * 결과값 리턴
-     * fetch		: 컬럼 조회 대상이 여러건일 경우. 컬렉션 반환 (return : List<Tuple>)
-	 * fetchOne  	: 조회 대상이 1건일 경우(1건 이상일 경우 에러). generic에 지정한 타입으로 반환	(return: Tuple)
-	 * fetchFirst 	: 조회 대상이 1건이든 1건 이상이든 무조건 1건만 반환. 내부에 보면 return limit(1).fetchOne() 으로 되어있음
-	 * fetchCount 	: 개수 조회. long 타입 반환
-	 * fetchResults : 조회한 리스트 + 전체 개수를 포함한 QueryResults 반환. count 쿼리가 추가로 실행된다.
-     */
-	
-	/**
-	 * Projections.bean - 컬럼명 없이 결과값만 받
-	 */
-	
 	private final JPAQueryFactory queryFactory;
 	 
 	// QuerydslRepositorySupport 클래스에는 기본생성자가 없음.
@@ -173,6 +162,31 @@ public class CustomUserRepository extends QuerydslRepositorySupport {
     					.fetchOne();
     			
     	return selectUserById;
+    }
+    
+    
+    /**
+     * 로그인 수행 시 '게스트 사용자' 정보 조회
+     * @param inviteUuid
+     * @return
+     * @throws Exception
+     */
+    public LoginVO selectGuestInfo(String inviteUuid) throws Exception{
+    	QLoginVO login = QLoginVO.loginVO;
+    	
+    	LoginVO selectGuestInfo = new LoginVO();
+    	
+    	
+    	selectGuestInfo = from(login)
+    					.select(Projections.bean(LoginVO.class
+    							, login.email
+    							, login.userName
+    							, login.inviteUuid)
+    							)
+    					.where(login.inviteUuid.eq(inviteUuid))
+    					.fetchOne();
+    	
+    	return selectGuestInfo;
     }
 
 

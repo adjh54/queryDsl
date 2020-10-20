@@ -119,4 +119,28 @@ public class UserVO {
 	@Transient
 	private String ovSessionId;
 	
+//	, user.email.as("ID")
+//	, user.userPw.as("PASSWORD")
+//	, user.authority.as("AUTHORITY")
+//	, user.enabled.as("ENABLED")
+//	, user.userName.as("NAME")
+//	, user.lang.as("LANG"))
+	@Transient
+	private String ID;
+	
+	@Transient
+	private String PASSWORD;
+	
+	@Transient
+	private String AUTHORITY;
+	
+	@Transient
+	private String ENABLED;
+	
+	@Transient
+	private String NAME;
+	
+	@Transient
+	private String LANG;
+		
 }
