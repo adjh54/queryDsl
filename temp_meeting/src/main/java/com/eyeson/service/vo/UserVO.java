@@ -20,6 +20,11 @@ import lombok.Setter;
 import lombok.ToString;
 
 /**
+ * Lombok Annotation Description
+ * @Getter: VO내에 값 불러오기 
+ * @Setter: VO내에 값 지정하기 
+ * @ToString: VO내의 모든값 불러오기(retrun: String)
+ * 
  * JPA Annotation Description 
  * @Entity:	클래스와 테이블 매핑
  * @Table:	매핑할 테이블 정보 명시
@@ -28,25 +33,26 @@ import lombok.ToString;
 @ToString
 @Entity
 @Table(name="tb_user_list")
-public class UserDTO {
+public class UserVO {
 	
 	/**
-	 * @ID:	
-	 * @GeneratedValue:
-	 * @Column: 
-	 * @CreationTimestamp: 
+	 * JPA Annotation Description
+	 * @ID:					PrimaryKey값 지정
+	 * @GeneratedValue:		Sequence 값 지정
+	 * @Column: 			Column명 및 속성 지정
+	 * @CreationTimestamp: 	TimeStamp 값 생성
 	 */
 	
 	@Id
 	@GeneratedValue
 	@Column(name = "user_seq", length = 11, nullable = false)
-	private Long user_seq;
+	private Long userSeq;
 
 	@Column(name = "email", length = 50, unique = true)
 	private String email;
 
 	@Column(name = "user_pw", length = 72)
-	private String user_pw;
+	private String userPw;
 
 	@Column(name = "authority", length = 20, columnDefinition = "varchar(20) default 'ROLE_USER'")
 	private String authority;
@@ -55,7 +61,7 @@ public class UserDTO {
 	private String enabled;
 
 	@Column(name = "user_name", length = 100)
-	private String user_name;
+	private String userName;
 
 	@Column(name = "legacyId", length = 50)
 	private String legacyId;
@@ -70,16 +76,16 @@ public class UserDTO {
 	private String lang;
 
 	@Column(name = "reg_id", length = 50, nullable = false)
-	private String reg_id;
+	private String regId;
 
 	@Column(name = "reg_date")
 	@CreationTimestamp
-	private LocalDateTime reg_date;
+	private LocalDateTime regDate;
 
 	@Column(name = "mod_id", length = 50)
-	private String mod_id;
+	private String modId;
 
-	@Column(name = "mod_date")
+	@Column(name = "modDate")
 	@CreationTimestamp
 	private LocalDateTime mod_date;
 	
@@ -113,10 +119,4 @@ public class UserDTO {
 	@Transient
 	private String ovSessionId;
 	
-	
-//	@Builder
-//    public User(String email, String user_name) {
-//        this.email = email;
-//        this.user_name = user_name;
-//    }
 }
